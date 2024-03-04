@@ -2,11 +2,20 @@ use crate::token::Token;
 
 struct Lexer {
     input: Vec<char>,
+    position: usize,
+    read_position: usize,
+    ch: char,
 }
 
 impl Lexer {
     pub fn new(input: &str) -> Lexer {
-        todo!()
+        let lexer: Lexer = Lexer {
+            input: input.chars().collect(),
+            position: 0,
+            read_position: 0,
+            ch: Default::default(),
+        };
+        lexer
     }
 
     pub fn next_token(&self) -> Token {
