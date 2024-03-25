@@ -9,13 +9,24 @@ struct Lexer {
 
 impl Lexer {
     pub fn new(input: &str) -> Lexer {
-        let lexer: Lexer = Lexer {
+        let mut lexer: Lexer = Lexer {
             input: input.chars().collect(),
             position: 0,
             read_position: 0,
             ch: Default::default(),
         };
+        lexer.read_char();
         lexer
+    }
+
+    fn read_char(&mut self) {
+        if self.read_position >= self.input.len() {
+            self.ch = '\0';
+        } else {
+            self.ch = self.input[self.read_position]
+        }
+        self.position = self.read_position;
+        self.read_position += 1;
     }
 
     pub fn next_token(&self) -> Token {
