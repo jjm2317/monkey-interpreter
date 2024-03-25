@@ -1,4 +1,4 @@
-use crate::token::Token;
+use crate::token::{Token, TokenKind};
 
 struct Lexer {
     input: Vec<char>,
@@ -29,8 +29,31 @@ impl Lexer {
         self.read_position += 1;
     }
 
-    pub fn next_token(&self) -> Token {
-        todo!()
+    pub fn next_token(&mut self) -> Token {
+        let token = match self.ch {
+            '=' => Lexer::new_token(TokenKind::Assign, self.ch),
+            ';' => Lexer::new_token(TokenKind::Semicolon, self.ch),
+            '(' => Lexer::new_token(TokenKind::Lparen, self.ch),
+            ')' => Lexer::new_token(TokenKind::Rparen, self.ch),
+            ',' => Lexer::new_token(TokenKind::Comma, self.ch),
+            '+' => Lexer::new_token(TokenKind::Plus, self.ch),
+            '{' => Lexer::new_token(TokenKind::Lbrace, self.ch),
+            '}' => Lexer::new_token(TokenKind::Rbrace, self.ch),
+            '\0' => Token {
+                kind: TokenKind::Eof,
+                literal: "".to_string(),
+            },
+            _ => Lexer::new_token(TokenKind::Illegal, self.ch),
+        };
+        self.read_char();
+        token
+    }
+
+    fn new_token(kind: TokenKind, ch: char) -> Token {
+        Token {
+            kind: kind,
+            literal: ch.to_string(),
+        }
     }
 }
 
@@ -83,7 +106,7 @@ mod test {
             },
         ];
 
-        let lexer = Lexer::new(input);
+        let mut lexer = Lexer::new(input);
 
         for (idx, expected_token) in expected.into_iter().enumerate() {
             let received_token = lexer.next_token();
